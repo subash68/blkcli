@@ -1,12 +1,13 @@
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, ValueEnum};
+use hex;
 use std::path::PathBuf;
 
-// Define modules here based on what Commands
-//
+use hash::derivation::Hash;
 
-/// A documentation for utility that we are going to build
-///
-/// For more information type sub command with -- help
+mod hash;
+
+/// Blkcli is a collection of tools that are meant to be useful while building, testing, and
+/// running block chain applications.
 #[derive(Parser, Debug)]
 #[clap(version)]
 struct Args {
@@ -19,12 +20,17 @@ struct Args {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
-    /// Hash any give file or string
-    /// some options should be described here
+    /// Provide common crypto hashing functions.
     Hash {
-        /// This is help for options in the sub command
+        #[clap(value_enum)]
+        algorithm: Algorithm,
+
+        /// Provide a filename to read and hash
+        #[clap(value_parser)]
+        input: PathBuf,
+
         #[clap(short, long)]
-        title: Option<String>,
+        string: bool,
     },
     /// mnenomic handle
     /// Generates random mnenomic based on give parameter
@@ -41,13 +47,30 @@ enum Commands {
     ParseWallet {},
 }
 
+#[derive(ValueEnum, Debug, Clone)]
+enum Algorithm {
+    Md5,
+    Sha1,
+}
+
 fn main() {
     let args = Args::parse();
 
     match args.cmd {
-        Commands::Hash { ref title } => {
-            if let Some(value) = title {
-                println!("Detected value from hash command {}", value);
+        Commands::Hash {
+            algorithm,
+            input,
+            string,
+        } => {
+            if string {
+                let input_str = input.to_str().unwrap();
+                println!(
+                    "{:}",
+                    hex::encode(Hash::compute(algorithm, input_str.as_bytes()))
+                );
+            } else {
+                let file_data = std::fs::read(input).expect("file not found");
+                println!("{:}", hex::encode(Hash::compute(algorithm, &file_data)));
             }
         }
         Commands::Mnenomic {
@@ -69,5 +92,4 @@ fn main() {
             println!("Parse wallet command ")
         }
     }
-    dbg!(args);
 }

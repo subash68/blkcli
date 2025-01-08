@@ -38,6 +38,7 @@ enum Commands {
         language: Option<String>,
     },
     Wallet {},
+    ParseWallet {},
 }
 
 fn main() {
@@ -60,6 +61,12 @@ fn main() {
                 "Detected value from mnenomic with {}, {}",
                 words_length, lang
             );
+        }
+        Commands::Wallet {} => {
+            println!("Wallet reference for Wallet")
+        }
+        Commands::ParseWallet {} => {
+            println!("Parse wallet command ")
         }
     }
     dbg!(args);

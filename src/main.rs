@@ -1,8 +1,7 @@
-use clap::{Parser, Subcommand, ValueEnum};
-use hex;
+use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
-use hash::derivation::Hash;
+use hash::derivation::{Algorithm, Hash};
 
 mod hash;
 
@@ -45,12 +44,6 @@ enum Commands {
     },
     Wallet {},
     ParseWallet {},
-}
-
-#[derive(ValueEnum, Debug, Clone)]
-enum Algorithm {
-    Md5,
-    Sha1,
 }
 
 fn main() {

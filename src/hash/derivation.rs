@@ -1,6 +1,7 @@
 use clap::ValueEnum;
 use md5;
 use sha2::{Digest, Sha224, Sha256, Sha384, Sha512, Sha512_224, Sha512_256};
+use sha3::{Keccak256, Keccak512};
 use sha3::{Sha3_224, Sha3_256, Sha3_384, Sha3_512};
 
 #[derive(ValueEnum, Debug, Clone)]
@@ -16,6 +17,8 @@ pub enum Algorithm {
     Sha3_256,
     Sha3_384,
     Sha3_512,
+    Keccak256,
+    Keccak512,
 }
 
 pub struct Hash {}
@@ -34,6 +37,8 @@ impl Hash {
             Algorithm::Sha3_256 => Sha3_256::digest(input).to_vec(),
             Algorithm::Sha3_384 => Sha3_384::digest(input).to_vec(),
             Algorithm::Sha3_512 => Sha3_512::digest(input).to_vec(),
+            Algorithm::Keccak256 => Keccak256::digest(input).to_vec(),
+            Algorithm::Keccak512 => Keccak512::digest(input).to_vec(),
         }
     }
 }

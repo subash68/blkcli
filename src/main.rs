@@ -4,6 +4,7 @@ use std::path::PathBuf;
 use hash::derivation::{Algorithm, Hash};
 
 mod hash;
+mod mnemonic;
 
 /// Blkcli is a collection of tools that are meant to be useful while building, testing, and
 /// running block chain applications.

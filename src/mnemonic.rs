@@ -1,1 +1,2 @@
-pub mod mnemonic;
+pub mod english;
+pub mod generator;

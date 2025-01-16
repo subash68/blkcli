@@ -2,6 +2,7 @@ use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 use hash::derivation::{Algorithm, Hash};
+use mnemonic::generator::{Generate, Language};
 
 mod hash;
 mod mnemonic;
@@ -34,8 +35,8 @@ enum Commands {
     },
     /// mnenomic handle
     /// Generates random mnenomic based on give parameter
-    Mnenomic {
-        /// Defines numnber of words to be generated (Default: 15)
+    Mnemonic {
+        /// Defines numnber of words to be generated (Default: 24)
         #[clap(short, long)]
         words: Option<u8>,
 
@@ -67,7 +68,7 @@ fn main() {
                 println!("{:}", hex::encode(Hash::compute(algorithm, &file_data)));
             }
         }
-        Commands::Mnenomic {
+        Commands::Mnemonic {
             ref words,
             ref language,
         } => {
@@ -78,6 +79,12 @@ fn main() {
                 "Detected value from mnenomic with {}, {}",
                 words_length, lang
             );
+            println!(
+                "{:?}",
+                Generate::words(words_length.into(), Language::English)
+            );
+
+            // generator::generate_rnd_bits();
         }
         Commands::Wallet {} => {
             println!("Wallet reference for Wallet")

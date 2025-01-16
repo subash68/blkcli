@@ -2,7 +2,7 @@ use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 use hash::derivation::{Algorithm, Hash};
-use mnemonic::generator;
+use mnemonic::generator::{Generate, Language};
 
 mod hash;
 mod mnemonic;
@@ -72,15 +72,19 @@ fn main() {
             ref words,
             ref language,
         } => {
-            let words_length = words.unwrap_or(24);
+            let words_length = words.unwrap_or(15);
             let lang = language.as_deref().unwrap_or("English");
 
             println!(
                 "Detected value from mnenomic with {}, {}",
                 words_length, lang
             );
+            println!(
+                "{:?}",
+                Generate::words(words_length.into(), Language::English)
+            );
 
-            generator::generate_rnd_bits();
+            // generator::generate_rnd_bits();
         }
         Commands::Wallet {} => {
             println!("Wallet reference for Wallet")

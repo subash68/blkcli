@@ -1,11 +1,5 @@
-pub fn convert_to_list() -> Vec<String> {
-    let lines = EN_WORD_LIST_BIP39.split("\n");
-
-    let mut word_list: Vec<String> = Vec::new();
-
-    word_list.(lines);
-
-    word_list
+pub fn convert_to_list() -> Vec<&'static str> {
+    EN_WORD_LIST_BIP39.lines().collect::<Vec<&str>>()
 }
 
 const EN_WORD_LIST_BIP39: &str = "abandon

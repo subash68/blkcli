@@ -1,2 +1,2 @@
-pub mod english;
 pub mod generator;
+pub mod wordlist;

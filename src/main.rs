@@ -41,8 +41,8 @@ enum Commands {
         words: Option<u8>,
 
         /// Defines which language mnemonic should be generated (Default: English)
-        #[clap(short, long)]
-        language: Option<String>,
+        #[clap(value_enum)]
+        language: Option<Language>,
     },
     Wallet {},
     ParseWallet {},
@@ -70,21 +70,17 @@ fn main() {
         }
         Commands::Mnemonic {
             ref words,
-            ref language,
+            language,
         } => {
             let words_length = words.unwrap_or(15);
-            let lang = language.as_deref().unwrap_or("English");
+            let lang = language.unwrap_or(Language::English);
 
             println!(
-                "Detected value from mnenomic with {}, {}",
+                "Generating {} word mnemonic for {:?}",
                 words_length, lang
             );
-            println!(
-                "{:?}",
-                Generate::words(words_length.into(), Language::English)
-            );
 
-            // generator::generate_rnd_bits();
+            println!("{}", Generate::words(words_length.into(), lang));
         }
         Commands::Wallet {} => {
             println!("Wallet reference for Wallet")

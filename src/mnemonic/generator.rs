@@ -1,11 +1,8 @@
-// Include packages what will contain word list
-use crate::mnemonic::english;
+use crate::mnemonic::wordlist;
 use clap::ValueEnum;
 use rand::rngs::OsRng;
 use rand::Rng;
-// pub mod english;
 
-// Add enum for language
 #[derive(ValueEnum, Debug, Clone)]
 pub enum Language {
     English,
@@ -24,15 +21,22 @@ pub struct Generate {}
 impl Generate {
     pub fn words(size: usize, language: Language) -> String {
         let mut mnemonic_str: Vec<String> = Vec::new();
+        let rnd_bits = Self::generate_rnd_bits();
 
-        //TODO: Based on select language read the word list
-
-        let word_list = english::convert_to_list();
-        let random_bytes = Self::generate_rnd_bits();
-
-        for index in (0..size) {
-            let sel_ind = random_bytes[index] as usize;
-            mnemonic_str.push(word_list[sel_ind].to_string());
+        let bip39_words: Result<Vec<String>, std::io::Error> = wordlist::read_bip39_words(language);
+        match bip39_words {
+            Ok(words) => {
+                // check if the bits generated is less than required
+                for index in 0..size {
+                    let sel_ind = rnd_bits[index] as usize;
+                    if sel_ind < words.len() {
+                        mnemonic_str.push(String::from(&words[sel_ind]));
+                    } else {
+                        eprintln!("Index {} is out of bound for word vectors", sel_ind);
+                    }
+                }
+            },
+            Err(e) => eprintln!("Unable to convert lines: {}", e),
         }
         mnemonic_str.join(" ")
     }
@@ -40,15 +44,12 @@ impl Generate {
     // Provide size in bytes: 16 bytes - 128 bits, 32 bytes - 256 bits, 64 bytes - 512 bytes
     fn generate_rnd_bits() -> Vec<u64> {
         let mut rng = OsRng;
-        let mut random_bytes = [0u64; 24];
+        let mut random_bytes = [0u64; 32];
         rng.fill(&mut random_bytes);
-
         let mut rnd_num = Vec::new();
-
         for byte in random_bytes {
             rnd_num.push(byte % 2048);
         }
-
         rnd_num
     }
 }

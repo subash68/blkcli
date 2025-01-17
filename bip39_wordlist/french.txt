@@ -1,8 +1,4 @@
-pub fn convert_to_list() -> Vec<&'static str> {
-    FR_WORD_LIST_BIP39.lines().collect::<Vec<&str>>()
-}
-
-const FR_WORD_LIST_BIP39: &str = "abaisser
+abaisser
 abandon
 abdiquer
 abeille
@@ -2049,4 +2045,4 @@ yacht
 zèbre
 zénith
 zeste
-zoologie";
+zoologie

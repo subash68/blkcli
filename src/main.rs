@@ -76,10 +76,10 @@ fn main() {
             let lang = language.unwrap_or(Language::English);
 
             println!(
-                "Detected value from mnenomic with {}, {:?}",
+                "Generating {} word mnemonic for {:?}",
                 words_length, lang
             );
-            // TODO: Convert lang into enum (using a filter)
+
             println!("{}", Generate::words(words_length.into(), lang));
         }
         Commands::Wallet {} => {

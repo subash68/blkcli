@@ -1,22 +1,19 @@
-// Include packages what will contain word list
-use crate::mnemonic::{chinese_traditional, english, french, japanese};
+use crate::mnemonic::wordlist;
 use clap::ValueEnum;
 use rand::rngs::OsRng;
 use rand::Rng;
-// pub mod english;
 
-// Add enum for language
 #[derive(ValueEnum, Debug, Clone)]
 pub enum Language {
     English,
     French,
-    //Italian,
+    Italian,
     Japanese,
-    //Korean,
-    //Spanish,
-    //Czech,
+    Korean,
+    Spanish,
+    Czech,
     ChineseTraditional,
-    //ChineseSimplified,
+    ChineseSimplified,
 }
 
 pub struct Generate {}
@@ -26,38 +23,20 @@ impl Generate {
         let mut mnemonic_str: Vec<String> = Vec::new();
         let rnd_bits = Self::generate_rnd_bits();
 
-        let mut word_list = vec![String::from("")];
-
-        match language {
-            Language::English => {
-                let word_list = english::convert_to_list();
-
+        let bip39_words: Result<Vec<String>, std::io::Error> = wordlist::read_bip39_words(language);
+        match bip39_words {
+            Ok(words) => {
+                // check if the bits generated is less than required
                 for index in 0..size {
                     let sel_ind = rnd_bits[index] as usize;
-                    mnemonic_str.push(word_list[sel_ind].to_string());
+                    if sel_ind < words.len() {
+                        mnemonic_str.push(String::from(&words[sel_ind]));
+                    } else {
+                        eprintln!("Index {} is out of bound for word vectors", sel_ind);
+                    }
                 }
-            }
-            Language::French => {
-                let word_list = french::convert_to_list();
-                for index in 0..size {
-                    let sel_ind = rnd_bits[index] as usize;
-                    mnemonic_str.push(String::from(word_list[sel_ind]));
-                }
-            }
-            Language::Japanese => {
-                let word_list = japanese::convert_to_list();
-                for index in 0..size {
-                    let sel_ind = rnd_bits[index] as usize;
-                    mnemonic_str.push(String::from(word_list[sel_ind]));
-                }
-            }
-            Language::ChineseTraditional => {
-                let word_list = chinese_traditional::convert_to_list();
-            }
-        }
-        for index in 0..size {
-            let sel_ind = rnd_bits[index] as usize;
-            mnemonic_str.push(String::from(word_list[sel_ind]));
+            },
+            Err(e) => eprintln!("Unable to convert lines: {}", e),
         }
         mnemonic_str.join(" ")
     }

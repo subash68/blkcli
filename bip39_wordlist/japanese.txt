@@ -1,8 +1,4 @@
-pub fn convert_to_list() -> Vec<&'static str> {
-    JP_WORD_LIST_BIP39.lines().collect::<Vec<&str>>()
-}
-
-const JP_WORD_LIST_BIP39: &str = "あいこくしん
+あいこくしん
 あいさつ
 あいだ
 あおぞら
@@ -2049,4 +2045,4 @@ const JP_WORD_LIST_BIP39: &str = "あいこくしん
 わじまし
 わすれもの
 わらう
-われる";
+われる

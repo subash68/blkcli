@@ -46,13 +46,10 @@ impl Generate {
         let mut rng = OsRng;
         let mut random_bytes = [0u64; 32];
         rng.fill(&mut random_bytes);
-
         let mut rnd_num = Vec::new();
-
         for byte in random_bytes {
             rnd_num.push(byte % 2048);
         }
-
         rnd_num
     }
 }

@@ -3,18 +3,19 @@ use std::fs::File;
 use std::io::{self, BufRead};
 
 pub fn read_bip39_words(language: Language) -> io::Result<Vec<String>> {
-    let file = match language {
-        Language::English => File::open("bip39_wordlist/english.txt"),
-        Language::French =>  File::open("bip39_wordlist/french.txt"),
-        Language::Italian => File::open("bip39_wordlist/italian.txt"),
-        Language::Japanese =>File::open("bip39_wordlist/japanese.txt"),
-        Language::Korean => File::open("bip39_wordlist/korean.txt"),
-        Language::Spanish => File::open("bip39_wordlist/spanish.txt"),
-        Language::Czech => File::open("bip39_wordlist/czech.txt"),
-        Language::ChineseTraditional => File::open("bip39_wordlist/chinese_traditional.txt"),
-        Language::ChineseSimplified => File::open("bip39_wordlist/chinese_simplified.txt"),
+    let file_name = match language {
+        Language::English => "bip39_wordlist/english.txt",
+        Language::French => "bip39_wordlist/french.txt",
+        Language::Italian => "bip39_wordlist/italian.txt",
+        Language::Japanese => "bip39_wordlist/japanese.txt",
+        Language::Korean => "bip39_wordlist/korean.txt",
+        Language::Spanish => "bip39_wordlist/spanish.txt",
+        Language::Czech => "bip39_wordlist/czech.txt",
+        Language::ChineseTraditional => "bip39_wordlist/chinese_traditional.txt",
+        Language::ChineseSimplified => "bip39_wordlist/chinese_simplified.txt",
     };
 
+    let file = File::open(file_name);
     let file = match file {
         Ok(f) => f,
         Err(e) => {

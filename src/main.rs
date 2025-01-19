@@ -6,6 +6,7 @@ use mnemonic::generator::{Generate, Language};
 
 mod hash;
 mod mnemonic;
+mod wallet;
 
 /// Blkcli is a collection of tools that are meant to be useful while building, testing, and
 /// running block chain applications.
@@ -75,10 +76,7 @@ fn main() {
             let words_length = words.unwrap_or(15);
             let lang = language.unwrap_or(Language::English);
 
-            println!(
-                "Generating {} word mnemonic for {:?}",
-                words_length, lang
-            );
+            println!("Generating {} word mnemonic for {:?}", words_length, lang);
 
             println!("{}", Generate::words(words_length.into(), lang));
         }

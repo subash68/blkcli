@@ -21,6 +21,12 @@ struct Args {
 }
 
 #[derive(Subcommand, Debug)]
+enum SubCommands {
+    Create {},
+    Inspect {},
+}
+
+#[derive(Subcommand, Debug)]
 enum Commands {
     /// Provide common crypto hashing functions.
     Hash {
@@ -45,7 +51,10 @@ enum Commands {
         #[clap(value_enum)]
         language: Option<Language>,
     },
-    Wallet {},
+    Wallet {
+        #[clap(subcommand)]
+        cmd: SubCommands,
+    },
     ParseWallet {},
 }
 
@@ -77,10 +86,17 @@ fn main() {
             let lang = language.unwrap_or(Language::English);
 
             println!("Generating {} word mnemonic for {:?}", words_length, lang);
-
             println!("{}", Generate::words(words_length.into(), lang));
         }
-        Commands::Wallet {} => {
+        Commands::Wallet { cmd } => {
+            match cmd {
+                SubCommands::Create {} => {
+                    println!("Create wallet command is passed");
+                }
+                SubCommands::Inspect {} => {
+                    println!("Inspect wallet command is passed");
+                }
+            }
             println!("Wallet reference for Wallet")
         }
         Commands::ParseWallet {} => {

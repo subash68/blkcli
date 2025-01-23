@@ -22,7 +22,13 @@ struct Args {
 
 #[derive(Subcommand, Debug)]
 enum SubCommands {
-    Create {},
+    Create {
+        #[clap(short, long)]
+        words: Option<u8>,
+
+        #[clap(short, long)]
+        language: Option<Language>,
+    },
     Inspect {},
 }
 
@@ -90,12 +96,17 @@ fn main() {
         }
         Commands::Wallet { cmd } => {
             match cmd {
-                SubCommands::Create {} => {
-                    println!("Create wallet command is passed");
+                SubCommands::Create {
+                    ref words,
+                    language,
+                } => {
+                    // TODO: Make this default word length into constant
+                    let words_length = words.unwrap_or(15);
+                    let lang = language.unwrap_or(Language::English);
+
+                    println!("Creating wallet for {}, {:?}", words_length, lang);
                 }
-                SubCommands::Inspect {} => {
-                    println!("Inspect wallet command is passed");
-                }
+                SubCommands::Inspect {} => {}
             }
             println!("Wallet reference for Wallet")
         }

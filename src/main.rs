@@ -21,6 +21,18 @@ struct Args {
 }
 
 #[derive(Subcommand, Debug)]
+enum SubCommands {
+    Create {
+        #[clap(short, long)]
+        words: Option<u8>,
+
+        #[clap(short, long)]
+        language: Option<Language>,
+    },
+    Inspect {},
+}
+
+#[derive(Subcommand, Debug)]
 enum Commands {
     /// Provide common crypto hashing functions.
     Hash {
@@ -45,7 +57,10 @@ enum Commands {
         #[clap(value_enum)]
         language: Option<Language>,
     },
-    Wallet {},
+    Wallet {
+        #[clap(subcommand)]
+        cmd: SubCommands,
+    },
     ParseWallet {},
 }
 
@@ -77,10 +92,22 @@ fn main() {
             let lang = language.unwrap_or(Language::English);
 
             println!("Generating {} word mnemonic for {:?}", words_length, lang);
-
             println!("{}", Generate::words(words_length.into(), lang));
         }
-        Commands::Wallet {} => {
+        Commands::Wallet { cmd } => {
+            match cmd {
+                SubCommands::Create {
+                    ref words,
+                    language,
+                } => {
+                    // TODO: Make this default word length into constant
+                    let words_length = words.unwrap_or(15);
+                    let lang = language.unwrap_or(Language::English);
+
+                    println!("Creating wallet for {}, {:?}", words_length, lang);
+                }
+                SubCommands::Inspect {} => {}
+            }
             println!("Wallet reference for Wallet")
         }
         Commands::ParseWallet {} => {

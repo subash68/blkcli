@@ -30,7 +30,7 @@ impl WalletGenerator {
         xprv.extend(master_private_key); // Master private key
 
         // Step 3: Add checksum
-        let checksum = Sha256::digest(&Sha256::digest(&xprv));
+        let checksum = Sha256::digest(Sha256::digest(&xprv));
         xprv.extend(&checksum[0..4]);
 
         // Step 4: Encode in Base58Check
@@ -39,7 +39,7 @@ impl WalletGenerator {
 
     pub fn generate_seed(mnemonic: &str) -> Vec<u8> {
         let password = format!("{:?}", mnemonic);
-        let salt = format!("mnemonic");
+        let salt = "mnemonic".to_string();
         let iterations = 2048; // number of rounds
 
         let mut key1 = [0u8; 64];

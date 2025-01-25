@@ -3,6 +3,7 @@ use std::path::PathBuf;
 
 use hash::derivation::{Algorithm, Hash};
 use mnemonic::generator::{Generate, Language};
+use wallet::root::WalletGenerator;
 
 mod hash;
 mod mnemonic;
@@ -23,6 +24,9 @@ struct Args {
 #[derive(Subcommand, Debug)]
 enum SubCommands {
     Create {
+        #[clap(short, long)]
+        root_only: bool,
+
         #[clap(short, long)]
         words: Option<u8>,
 
@@ -99,16 +103,27 @@ fn main() {
                 SubCommands::Create {
                     ref words,
                     language,
+                    root_only,
                 } => {
                     // TODO: Make this default word length into constant
                     let words_length = words.unwrap_or(15);
                     let lang = language.unwrap_or(Language::English);
 
-                    println!("Creating wallet for {}, {:?}", words_length, lang);
+                    println!(
+                        "Creating wallet for {}, {:?}, {}",
+                        words_length, lang, root_only
+                    );
+
+                    let words = Generate::words(words_length.into(), lang);
+                    let seed = WalletGenerator::generate_seed(&words);
+                    let xprv_root_key = WalletGenerator::generate_xprv(&seed);
+
+                    println!("mnemonic: {:?}", words);
+                    println!("seed: {:?}", hex::encode(seed));
+                    println!("root key: {:?}", xprv_root_key);
                 }
                 SubCommands::Inspect {} => {}
             }
-            println!("Wallet reference for Wallet")
         }
         Commands::ParseWallet {} => {
             println!("Parse wallet command ")

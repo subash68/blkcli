@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+    type: backend
+spec:
+  # Setup resource limit to prevent starvation!!!
+  containers:
+    - name: nginx
+      image: nginx

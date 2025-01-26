@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: blkcli
+  labels:
+    app: blkcli-util
+    type: cmd
+spec:
+  containers:
+    - name: blkcli
+      image: bsubi68/blkcli
